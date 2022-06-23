@@ -1,0 +1,139 @@
+:root {
+    --color1: #064663;
+    --color2: #041C32; 
+    --color3: #2A2550;
+    --color4: #251D3A;
+}
+
+body {
+    /* background: linear-gradient(135deg, var(--color1), var(--color2)); */
+    background-image: url("https://images.pexels.com/photos/2181111/pexels-photo-2181111.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    height: 100vh;
+    padding: 20px 0;
+    font-family: 'Oswald', sans-serif;
+}
+
+header {
+    color: white;
+    font-size: 4em;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    width: fit-content;
+    margin: 0 auto;
+    padding: 5px 20px;
+}
+
+
+#textfield-container {
+    margin: 20px;
+}
+form {
+    background: white;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+#textfield {
+    font-family: 'Oswald', sans-serif;
+    border: 0;
+    font-size: 1.5em;
+    width: 400px;
+    padding: 10px;
+}
+
+#add-btn {
+    border: 0;
+    font-size: 2em;
+    padding: 10px;
+    color: rgb(5, 188, 170);
+    transition: all 0.5s ease-in-out;
+    cursor: pointer;
+}
+
+#add-btn:hover {
+    color: white;
+    background: rgb(5, 188, 170);
+}
+
+#filter-select-container {
+    margin: 50px;
+    width: 400px;
+    padding: 20px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#filter-select {
+    font-size: 1em;
+    padding: 5px;
+    margin: 0 auto;
+}
+
+#todolist {
+    padding: 20px;
+    width: 400px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.3);
+    font-size: 0.7em;
+}
+
+.task {
+    background: rgba(255, 255, 255, 0.8);
+    display: grid;
+    grid-template-columns: 80% 10% 10%;
+    padding: 0px 10px;
+    margin: 10px 0;
+    border-radius: 5%;
+    transition: all 0.3s ease-in-out;
+}
+
+.task:hover {
+    opacity: 1.5;
+}
+
+.task-name {
+    font-size: 1.5em;
+    margin: 5px;
+}
+
+.complete-btn {
+    border: 0;
+    border-radius: 25%;
+    background: rgb(180, 255, 180);
+    margin: 5px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer
+}
+
+.delete-btn {
+    border: 0;
+    border-radius: 25%;
+    background: palevioletred;
+    margin: 5px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+
+
+.complete-btn:hover {
+    background: rgb(0, 255, 0);
+}
+
+.delete-btn:hover {
+    background: rgb(255, 0, 85);
+}
+
+.completed-task {
+    background:rgb(0, 255, 0);
+}
+
+.disappearing {
+    background: red;
+    opacity: 0; 
+    transition: all 1s ease-in-out;
+}
