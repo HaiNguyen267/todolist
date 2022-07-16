@@ -4,37 +4,58 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <Link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title> To-do List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">  
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/190/190411.png">
 </head>
 <body>
-    <header>TODOLIST</header>
+    
+    <header>Todolist</header>
+
+    <div id="change-background-container">
+        <div id="previous" class="btn">
+            <i class="fa-solid fa-angle-left"></i>
+        </div>
+
+        <div id="next" class="btn">
+            <i class="fa-solid fa-angle-right"></i>
+        </div>
+    </div>
 
     <div id="textfield-container">
         <form action="">
-            <input type="text" id="textfield" placeholder="Enter a task to">
+            <input type="text" id="textfield" placeholder="Enter a task">
             <button id="add-btn">
                 <i class="fa-solid fa-plus"></i>
             </button>
         </form>
+        
     </div>
 
-    <div id="filter-select-container">
-        <select name="" id="filter-select">
-            <option value="all">All</option>
-            <option value="completed">Completed</option>
-            <option value="uncompleted">Uncompleted</option>
-        </select>
+    <div id="filter-container">
+        <div>
+            <button id="display-all"  class="display-btn checked-btn">All</button>
+        </div>
+
+        <div>
+            <button id="display-completed" class="display-btn">Completed</button>
+        </div> 
+
+        <div>
+            <button id="display-uncompleted" class="display-btn">Uncompleted</button>
+        </div>
     </div>
 
     <div id="todolist-container">
         <div id="todolist"></div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js "></script>
+    <!-- <script src="task.js"></script> -->
 </body>
 </html>

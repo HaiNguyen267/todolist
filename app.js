@@ -1,177 +1,191 @@
 class Task {
-    constructor(name) {
+    constructor(name, isCompleted) {
         this.name = name;
-        this.isCompleted = false;
+        this.isCompleted = isCompleted;
     }
 
     complete() {
         this.isCompleted = true;
     }
-}
-// localStorage.clear()
-const textfield = document.getElementById('textfield');
-const addBtn = document.getElementById("add-btn");
-const filterSelect = document.getElementById("filter-select");
-const todoListDiv = document.getElementById("todolist");
+}   
 
-let todoList = [];
-let viewMode = "all";
+const textfield = document.getElementById("textfield")
+const addBtn = document.getElementById("add-btn")
+const todolistDiv = document.getElementById("todolist")
+const displayAllBtn = document.getElementById("display-all")
+const displayCompletedBtn = document.getElementById("display-completed")
+const displayUncompleteBtn = document.getElementById("display-uncompleted")
+const prevThemeBtn = document.getElementById("previous")
+const nextThemeBtn = document.getElementById("next")
+
+addBtn.addEventListener("click", addTask);
+displayAllBtn.addEventListener("click", displayAllTasks)
+displayCompletedBtn.addEventListener("click", displayCompletedTasks)
+displayUncompleteBtn.addEventListener("click", displayUncompletedTasks)
+prevThemeBtn.addEventListener("click", changeToPreviousTheme)
+nextThemeBtn.addEventListener("click", changeToNextTheme)
+
+let themes = ["theme1", "theme2", "theme3", "theme4", "theme5", "theme6", "theme7"];
+let themeIndex = 1;
+
+let todolist = [];
 
 loadData();
 
-addBtn.addEventListener("click", addTask);
-filterSelect.addEventListener("click", filterTasks);
-
 function loadData() {
-    if (localStorage.getItem("data") !== null) {
-        let data = JSON.parse(localStorage.getItem("data"));
+
+    let data = localStorage.getItem("data")
+
+    if (data != null) {
+        let json = JSON.parse(data)
+        loadTasks(json.taskArr)
         
-        loadTasks(data.taskArr);
-        loadViewMode(data.viewMode);
-        
+        themeIndex = json.themeIndex
+        loadTheme();
     }
 }
 
 function loadTasks(taskArr) {
-
     taskArr.forEach(taskJson => {
-        let task = new Task(taskJson.name);
-        todoList.push(task);
+        let task = new Task(taskJson.name, taskJson.isCompleted)
+        todolist.push(task)
 
-        let taskDiv = createTaskDiv(task);
-        todoListDiv.appendChild(taskDiv);
-
-        if (taskJson.isCompleted) {
-            task.complete();
-            taskDiv.classList.add("completed-task");
-        }
-    });
+        let taskDiv = createTaskDiv(task)
+        todolistDiv.appendChild(taskDiv)
+    })
 }
 
+function loadTheme() {
+    document.body.className = themes[themeIndex]
+}   
 
-function loadViewMode(viewMode) {
-
-    for (let i = 0; i < filterSelect.length; i++) {
-        if (filterSelect.options[i].value === viewMode) {
-            filterSelect.options[i].selected =true;
-            break;
-        }
-    }
-
-    filterTasks();
-}
 function addTask(e) {
     e.preventDefault();
-    if (textfield.value.trim().length > 0) {
-        let task = new Task(textfield.value);
-        todoList.push(task);
-        
-        let taskDiv = createTaskDiv(task);
-        todoListDiv.appendChild(taskDiv);
 
-        saveChange();
-        setDisplayBasedOnViewMode(taskDiv);
+    if (textfield.value.length != 0) {
+        let task = new Task(textfield.value, false);
+        todolist.push(task);
+
+        let taskDiv = createTaskDiv(task);
+        todolistDiv.appendChild(taskDiv);
+
         textfield.value = "";
-    }
+        saveChange()
+    }   
 }
 
 function createTaskDiv(task) {
-    let taskDiv = document.createElement("div");
-    taskDiv.classList.add("task");
+    let taskDiv = document.createElement("div")
+    taskDiv.classList.add("task")
+    if (task.isCompleted) {
+        taskDiv.classList.add("completed-task")
+    }
+    
+    let taskName = document.createElement("p")
+    taskName.classList.add("task-name")
+    taskName.textContent = task.name;
 
-    let pName = document.createElement("p");
-    pName.innerText = task.name;
-    pName.classList.add("task-name");
-
-    let completeBtn = document.createElement("button");
+    let completeBtn = document.createElement("button")
+    completeBtn.classList.add("complete-btn")
     completeBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-    completeBtn.classList.add("complete-btn");
     completeBtn.addEventListener("click", () => {
-        task.complete();
+        task.complete()
         taskDiv.classList.add("completed-task");
+
         saveChange();
-    });
+    })
 
-    let deleteBtn = document.createElement("button");
+    let deleteBtn = document.createElement("button")
+    deleteBtn.classList.add("delete-btn")
     deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-    deleteBtn.classList.add("delete-btn");
     deleteBtn.addEventListener("click", () => {
-        taskDiv.classList.add("disappearing");
+        taskDiv.classList.add("deleted-task")
         setTimeout(() => {
-            console.log('before: ' + todoList.length);
-            todoList.splice(todoList.indexOf(task), 1);
-            todoListDiv.removeChild(taskDiv);
-            console.log("deleted");
-            console.log("after: " + todoList.length);
+            let index = todolist.indexOf(task)
+            todolist.splice(index, 1)
+            todolistDiv.removeChild(taskDiv)
+
             saveChange();
-        }, 1000);
-    });
+        }, 500)
+    })
+        
+    taskDiv.appendChild(taskName)
+    taskDiv.appendChild(completeBtn)
+    taskDiv.appendChild(deleteBtn)
 
-    taskDiv.appendChild(pName);
-    taskDiv.appendChild(completeBtn);
-    taskDiv.appendChild(deleteBtn);
-
-    return taskDiv;
+    return taskDiv
 }
 
 function saveChange() {
-    let data = {viewMode: viewMode, taskArr: todoList};
-    localStorage.setItem("data", JSON.stringify(data));
-    
-}
-
-function setDisplayBasedOnViewMode(newTaskDiv) {
-    // a newly created task is uncompleted task,
-    // if the viewMode is set to display only completed tasks,
-    // then the newly created task will be hidden
-
-    if (viewMode === "completed") {
-        newTaskDiv.style.display = "none";
-    }
-}
-
-function filterTasks() {
-    switch (filterSelect.value) {
-        case "all": 
-            viewMode = "all";
-            displayAllTasks();
-            break;
-        case "completed": 
-            viewMode = "completed";
-            displayCompletedTasks();
-            break;
-        case "uncompleted": 
-            viewMode = "uncompleted";
-            displayUncompletedTasks();
-            break;
-    }
-
-    saveChange();
+    console.log('themeindex: ' + themeIndex);
+    let data = {themeIndex: themeIndex, taskArr: todolist}
+    console.log("what i'll save: " + JSON.stringify(data));
+    localStorage.setItem("data", JSON.stringify(data))
 }
 
 function displayAllTasks() {
-
-    todoListDiv.childNodes.forEach(taskDiv => {
-        taskDiv.style.display = "grid";
+    todolistDiv.childNodes.forEach(taskDiv => {
+        taskDiv.style.display = "grid"
     })
+
+    markBtnAsChecked(displayAllBtn)
 }
 
 function displayCompletedTasks() {
-    todoListDiv.childNodes.forEach(taskDiv => {
-        if (taskDiv.classList.contains("completed-task")) {
-            taskDiv.style.display = "grid";
+    todolistDiv.childNodes.forEach(taskDiv => {
+        if (taskDiv.classList.contains('completed-task')) {
+            taskDiv.style.display = 'grid'
         } else {
-            taskDiv.style.display = "none";
+            taskDiv.style.display = 'none'
+        }
+    })
+
+    markBtnAsChecked(displayCompletedBtn)
+}
+
+function displayUncompletedTasks() {
+    todolistDiv.childNodes.forEach(taskDiv => {
+        if (taskDiv.classList.contains('completed-task')) {
+            taskDiv.style.display = 'none'
+        } else {
+            taskDiv.style.display = 'grid'
+        }
+    })
+
+    markBtnAsChecked(displayUncompleteBtn)
+}
+
+function markBtnAsChecked(displayBtn) {
+    let btns = [displayAllBtn, displayCompletedBtn, displayUncompleteBtn];
+
+    btns.forEach(btn => {
+        if (btn === displayBtn) {
+            btn.classList.add("checked-btn")
+        } else {
+            btn.classList.remove("checked-btn")
         }
     })
 }
 
-function displayUncompletedTasks() {
-    todoListDiv.childNodes.forEach(taskDiv => {
-        if (taskDiv.classList.contains("completed-task")) {
-            taskDiv.style.display = "none";
-        } else {
-            taskDiv.style.display = "grid";
-        }
-    })
+function changeToPreviousTheme() {
+    themeIndex --;
+
+    if (themeIndex < 0) {
+        themeIndex = themes.length - 1;
+    }
+
+    loadTheme()
+    saveChange()
 }
+
+function changeToNextTheme() {
+    themeIndex ++;
+
+    if (themeIndex >= themes.length) {
+        themeIndex = 0;
+    }
+
+    loadTheme()
+    saveChange()
+}
+
